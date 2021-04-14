@@ -1,0 +1,42 @@
+//****************************************************
+// protoc --go_out=. --go_opt=paths=./pb \
+//     --go-grpc_out=. --go-grpc_opt=paths=./pb \
+//     routeguide/route_guide.proto
+//
+// protoc --go_out=. --go_opt=paths=source_relative \
+//     --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+//     helloworld/helloworld.proto
+//
+// protoc --go_out=. --go-grpc_out=. ./*.proto
+//****************************************************
+
+syntax = "proto3";
+
+// dirout;package
+option go_package = "./pb;pb";
+
+package helloworld;
+
+service FullNameBuilder {
+    // Recebe um nome e sobrenome e retorna um nome completo
+    rpc GetFullName (FullNameRequest) returns (FullName){}
+    // Recebe um nome completo e retorna um stream com varios nomes
+    rpc GetNames (FullName) returns (stream Name){}
+    // Recebe varios nomes e retorna um nome completo
+    rpc GetFullNameWithNames(stream Name) returns (FullName) {}
+    // Recebe varios nomes e retorna varios nomes
+    rpc GetNamesStream (stream Name) returns (stream Name){}
+}
+
+message FullNameRequest {
+    string firstName = 1;
+    string lastName = 2;
+}
+
+message FullName {
+    string name = 1;
+}
+
+message Name {
+    string name = 1;
+}
